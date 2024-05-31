@@ -1,0 +1,12 @@
+@import '../../shared/styles/common.scss';
+
+.container {
+  @include flex(row, center, center);
+
+  width: 100%;
+
+  .ui-input {
+    width: 100%;
+    padding: $sp-3;
+  }
+}

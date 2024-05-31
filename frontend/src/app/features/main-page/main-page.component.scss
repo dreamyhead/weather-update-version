@@ -1,0 +1,16 @@
+@import '../ui/shared/styles/common.scss';
+
+:host {
+  @include flex(column, unset, unset);
+
+  flex: 1;
+
+  .container {
+    @include flex(row, center, flex-start);
+
+    height: 100%;
+    width: 100%;
+    padding: $sp-4;
+    box-sizing: border-box;
+  }
+}

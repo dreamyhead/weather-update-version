@@ -1,0 +1,7 @@
+@import './features/ui/shared/styles/common.scss';
+
+:host {
+  @include flex(column, unset, unset);
+
+  height: 100%;
+}
