@@ -8,8 +8,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class TruncatePipe implements PipeTransform {
 
   transform(value: number | undefined): any {
-    console.log(value);
-    
     if (!value) {
       return;
     }
