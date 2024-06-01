@@ -1,11 +1,25 @@
 <div class="container">
 	<div class="container-with-icon">
-		<span class="material-icons">cloudy_snowing</span>
-		<span class="title">{{title}}</span>
+		<span class="title">{{ 'applicationTitle' | translate }}</span>
 	</div>
   <span class="example-spacer"></span>
 	<div class="container-with-icon">
-		<span class="material-icons">public</span>
-		<span>{{language}}</span>
+		<div class="item">
+			<span class="material-icons button"
+						[title]="'changeTheme' | translate"
+						(click)="changeTheme($event)">
+						{{darkMode ? 'light_mode' : 'dark_mode'}}
+			</span>
+		</div>
+		<div class="item">
+			<span class="material-icons button"
+						[title]="'changeLanguage' | translate"
+						(click)="changeLanguage($event)">
+				public
+			</span>
+			<span class="language">
+				{{enableEnglish ? 'EN' : 'RU'}}
+			</span>
+		</div>
 	</div>
 </div>

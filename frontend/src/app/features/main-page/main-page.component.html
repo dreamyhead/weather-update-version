@@ -1,5 +1,13 @@
-<div class="container">
-  <app-card></app-card>
-  <app-card></app-card>
-  <app-card></app-card>
+<div class="grid" [ngClass]="darkMode ? 'dark-mode' : 'light-mode'">
+  <div class="grid-container">
+    <app-card></app-card>
+  </div>
+  <div class="grid-container">
+    <div class="grid-item">
+      <app-card></app-card>
+    </div>
+    <div class="grid-item">
+      <app-card></app-card>
+    </div>
+  </div>
 </div>
