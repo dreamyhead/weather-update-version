@@ -6,6 +6,7 @@ import { MainPageComponent } from './main-page/main-page.component';
 import { CardComponent } from './ui/components/card/card.component';
 import { TranslatePipe } from './ui/shared/pipes/translate.pipe';
 import { HttpClientModule } from '@angular/common/http';
+import { TruncatePipe } from './ui/shared/pipes/truncate.pipe';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,8 @@ import { HttpClientModule } from '@angular/common/http';
     CardComponent,
     SearchInputComponent,
     MainPageComponent,
-    TranslatePipe
+    TranslatePipe,
+    TruncatePipe,
   ],
   imports: [
     CommonModule,
@@ -24,7 +26,8 @@ import { HttpClientModule } from '@angular/common/http';
     CardComponent,
     SearchInputComponent,
     MainPageComponent,
-    TranslatePipe
+    TranslatePipe,
+    TruncatePipe
   ]
 })
 export class FeaturesModule { }

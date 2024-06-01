@@ -18,11 +18,9 @@ export class TranslationService {
 
   setTranslations(translations: any) {
     this.translations = translations;
-    console.log('Translations set:', this.translations);
   }
 
   getTranslation(key: string): string {
-    console.log('Translation requested for:', this.translations[key]);
     return this.translations[key] || key;
   }
 

@@ -12,7 +12,7 @@
     width: 100%;
     padding: $sp-4;
     box-sizing: border-box;
-    transition: background-color 0.5s ease, color 0.5s ease;
+    transition: color 0.1s ease, background-color 0.5s ease;
 
     .grid-container { 
       @include flex(column, center, center);
@@ -32,7 +32,7 @@
   }
 
   .light-mode {
-    background-color: white;
+    background-color: rgb(32, 32, 32);
     color: #000;
   }
 
@@ -40,4 +40,23 @@
     background-color: rgb(32, 32, 32);
     color: #fff;
   }
+}
+
+.temperature-container {
+  width: 100%;
+  border-radius: 15px 15px 0px 0px;
+}
+
+.current-temperature {
+  font-size: 6rem;
+  margin: 0;
+}
+
+.temperature-title {
+  @include flex(column, flex-start, center);
+
+  flex: 2;
+  width: 100%;
+  padding: 5rem;
+  box-sizing: border-box;
 }

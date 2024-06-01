@@ -1,5 +1,9 @@
 {
   "applicationTitle": "Погода",
   "changeTheme": "Сменить тему",
-  "changeLanguage": "Сменить язык"
+  "changeLanguage": "Сменить язык",
+  "currentTemperature": "Погода в городе",
+  "feelLikeTemperature": "Ощущается как",
+  "minTemperature": "Мин. температура",
+  "maxTemperature": "Макс. температура"
 }

@@ -1,6 +1,23 @@
 <div class="grid" [ngClass]="darkMode ? 'dark-mode' : 'light-mode'">
   <div class="grid-container">
-    <app-card></app-card>
+    <app-card>
+      @if (!forecastWeather) {
+        <div>Введите свой город</div>
+      }
+      @if (forecastWeather) {
+        <div class="temperature-container">
+          <div class="temperature-title">
+            <span>{{ 'currentTemperature' | translate }} {{forecastWeather.name}}, {{forecastWeather.sys?.country}}</span>
+            <h1 class="current-temperature">+{{forecastWeather.main!.temp | truncate}}°C</h1>
+            <span>{{ 'feelLikeTemperature' | translate }}: +{{forecastWeather.main?.feels_like | truncate}}°C</span>
+            <span>{{ 'maxTemperature' | translate }}: +{{forecastWeather.main?.temp_max | truncate}}°C</span>
+            <span>{{ 'minTemperature' | translate }}: +{{forecastWeather.main?.temp_min | truncate}}°C</span>
+          </div>
+        </div>
+      }
+      <div class="custom-divider"></div>
+      <button (click)="inputCity($event)">asdasdasd</button>
+    </app-card>
   </div>
   <div class="grid-container">
     <div class="grid-item">

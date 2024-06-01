@@ -1,5 +1,9 @@
 {
   "applicationTitle": "Weather",
   "changeTheme": "Change Theme",
-  "changeLanguage": "Change Language"
+  "changeLanguage": "Change Language",
+  "currentTemperature": "Weather for",
+  "feelLikeTemperature": "Feeling like",
+  "minTemperature": "Min temperature",
+  "maxTemperature": "Max temperature"
 }
