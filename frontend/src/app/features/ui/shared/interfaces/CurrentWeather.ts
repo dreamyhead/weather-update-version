@@ -5,7 +5,7 @@ export interface CurrentWeather {
     lon?: number,
     lat?: number
   },
-  weather?: [
+  weather: [
     {
       id?: number,
       main?: string,

@@ -7,14 +7,32 @@
       @if (forecastWeather) {
         <div class="temperature-container">
           <div class="temperature-title">
-            <span>{{ 'currentTemperature' | translate }} {{forecastWeather.name}}, {{forecastWeather.sys?.country}}</span>
-            <h1 class="current-temperature">+{{forecastWeather.main!.temp | truncate}}°C</h1>
-            <span>{{ 'feelLikeTemperature' | translate }}: +{{forecastWeather.main?.feels_like | truncate}}°C</span>
-            <span>{{ 'maxTemperature' | translate }}: +{{forecastWeather.main?.temp_max | truncate}}°C</span>
-            <span>{{ 'minTemperature' | translate }}: +{{forecastWeather.main?.temp_min | truncate}}°C</span>
+            <div class="content">
+              <span >{{ 'currentTemperature' | translate }} {{forecastWeather.name}}, {{forecastWeather.sys?.country}}</span>
+              <h1 class="current-temperature">+{{forecastWeather.main!.temp | truncate}}°C</h1>
+              <div class="description">
+                <div class="row">
+                  <span>{{ 'feelLikeTemperature' | translate }}:</span>
+                  <span>+{{forecastWeather.main?.feels_like | truncate}}°C</span>
+                </div>
+                <div class="row">
+                  <span>{{ 'maxTemperature' | translate }}:</span>
+                  <span>+{{forecastWeather.main?.temp_max | truncate}}°C</span>
+                </div>
+                <div class="row">
+                  <span>{{ 'minTemperature' | translate }}:</span>
+                  <span>+{{forecastWeather.main?.temp_min | truncate}}°C</span>
+                </div>
+              </div>
+            </div>
+            <div class="content current-image">
+              <button (click)="drawSun()">asdsad</button>
+              <canvas id="weatherCanvas" style="border:1px solid #000000;"></canvas>
+            </div>
           </div>
         </div>
       }
+      <div class="custom-divider"></div>
       <div class="custom-divider"></div>
       <button (click)="inputCity($event)">asdasdasd</button>
     </app-card>
