@@ -3,6 +3,7 @@ import { StyleService } from '../ui/shared/services/style.service';
 import { Subscription } from 'rxjs';
 import { RestService } from '../ui/shared/services/rest.service';
 import { CurrentWeather } from '../ui/shared/interfaces/CurrentWeather';
+import L from 'leaflet';
 
 @Component({
   selector: 'main-page',
@@ -12,9 +13,9 @@ import { CurrentWeather } from '../ui/shared/interfaces/CurrentWeather';
 
 export class MainPageComponent {
   darkMode: boolean = false;
-  forecastWeather!: CurrentWeather;
+  forecastWeather!: CurrentWeather | null;
   darkModeSubscription!: Subscription;
-
+  private map: L.Map | undefined;
 
   constructor(
     private restService: RestService,
@@ -22,6 +23,11 @@ export class MainPageComponent {
   ) {}
 
   ngOnInit() {
+    this.restService.getCurrentWeather('Москва').subscribe((data) => {
+      this.forecastWeather = data;
+      this.initMap();
+    })
+
     this.darkModeSubscription = this.styleService.darkModeSubject.subscribe((mode: boolean) => {
       this.darkMode = mode;
     });
@@ -30,38 +36,27 @@ export class MainPageComponent {
   inputCity(event: Event) {
     event.preventDefault();
     event.stopPropagation();
-    this.restService.getCurrentWeather('Москва').subscribe((data) => {
+    this.forecastWeather = null;
+    this.restService.getCurrentWeather('Лондон').subscribe((data) => {
       this.forecastWeather = data;
     })
   }
 
-  drawSun() {
-    const canvas = document.getElementById('weatherCanvas') as HTMLCanvasElement;
-    const ctx = canvas!.getContext('2d')!;
-    const gradient = ctx.createRadialGradient(100, 100, 50 * 0.5, 100, 100, 50);
-    gradient.addColorStop(0, 'yellow');
-    gradient.addColorStop(1, 'orange');
+  private initMap(): void {
+    this.map = L.map('map', {
+      center: [this.forecastWeather?.coord?.lat!, this.forecastWeather?.coord?.lon!],
+      zoom: 13
+    });
 
-    ctx.beginPath();
-    ctx.arc(100, 100, 50, 0, 2 * Math.PI, false);
-    ctx.fillStyle = gradient;
-    ctx.fill();
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '© OpenStreetMap'
+    }).addTo(this.map);
 
-    // Рисование лучей солнышка
-    for (let i = 0; i < 12; i++) {
-      let angle = (i * 2 * Math.PI) / 12;
-      let x1 = 100 + (50 + 10) * Math.cos(angle);
-      let y1 = 100 + (50 + 10) * Math.sin(angle);
-      let x2 = 100 + (50 + 30) * Math.cos(angle);
-      let y2 = 100 + (50 + 30) * Math.sin(angle);
-
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-      ctx.strokeStyle = 'rgba(255, 165, 0, 0.8)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-    }
+    L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=4f592b2566721ec99b69bb95df24da9a`, {
+      maxZoom: 18,
+      attribution: 'Map data © OpenWeatherMap'
+    }).addTo(this.map);
   }
 
   ngOnDestroy() {
