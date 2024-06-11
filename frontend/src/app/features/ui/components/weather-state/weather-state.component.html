@@ -1,0 +1,25 @@
+<div class="current-weather-icon">
+  @if (type === 'Clear') {
+    <img class="sun" src="/assets/icons/sunny.png" alt="sun">
+  }
+  @if (type === 'Clouds') {
+    <img class="cloudy" src="/assets/icons/wb_cloudy.png" alt="cloudy">
+    <img class="sun" src="/assets/icons/sunny.png" alt="sun">
+  }
+  @if (type === 'Atmosphere') {
+    <img class="cloudy" src="/assets/icons/foggy_48dp.png" alt="cloudy">
+  }
+  @if (type === 'Snow') {
+    <img class="cloudy" src="/assets/icons/cloudy_snowing_48dp.png" alt="cloudy">
+  }
+  @if (type === 'Rain') {
+    <img class="cloudy" src="/assets/icons/wb_cloudy.png" alt="cloudy">
+  }
+  @if (type === 'Drizzle') {
+    <img class="cloudy" src="/assets/icons/wb_cloudy.png" alt="cloudy">
+    <img class="cloudy" src="/assets/icons/wb_cloudy.png" alt="cloudy">
+  }
+  @if (type === 'Thunderstorm') {
+    <img class="cloudy" src="/assets/icons/thunderstorm_48dp.svg" alt="cloudy">
+  }
+</div>

@@ -12,21 +12,18 @@
               <h1 class="current-temperature">+{{forecastWeather.main!.temp | truncate}}°C</h1>
               <span>{{forecastWeather.weather[0].description}}</span>
             </div>
-            <div class="content current-image">
-              <div class="current-weather-icon">
-                <img class="cloudy" src="/assets/icons/wb_cloudy.png" alt="cloudy">
-                <img class="sun" src="/assets/icons/sunny.png" alt="sun">
-              </div>
+            <div class="content">
+              <app-weather-state [type]="forecastWeather.weather[0].main"></app-weather-state>
             </div>
           </div>
         </div>
         <div class="divider"></div>
         <div class="desc-container">
           <div class="description">
-            <div class="row">Атм. давл., земля: {{forecastWeather.main?.grnd_level}}</div>
-            <div class="row">Атм. давл., море: {{forecastWeather.main?.sea_level}}</div>
             <div class="row">Влажность: {{forecastWeather.main?.humidity}}</div>
             <div class="row">Давление: {{forecastWeather.main?.pressure}}</div>
+            <div class="row">Атмосферное давление, земля: {{forecastWeather.main?.grnd_level ? forecastWeather.main?.grnd_level : '-'}}</div>
+            <div class="row">Атмосферное давление, море: {{forecastWeather.main?.sea_level  ? forecastWeather.main?.sea_level : '-'}}</div>
           </div>
         </div>
       }

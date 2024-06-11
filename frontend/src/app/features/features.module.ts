@@ -7,12 +7,14 @@ import { CardComponent } from './ui/components/card/card.component';
 import { TranslatePipe } from './ui/shared/pipes/translate.pipe';
 import { HttpClientModule } from '@angular/common/http';
 import { TruncatePipe } from './ui/shared/pipes/truncate.pipe';
+import { WeatherStateComponent } from './ui/components/weather-state/weather-state.component';
 
 @NgModule({
   declarations: [
     AppBarComponent,
     CardComponent,
     SearchInputComponent,
+    WeatherStateComponent,
     MainPageComponent,
     TranslatePipe,
     TruncatePipe,
@@ -25,6 +27,7 @@ import { TruncatePipe } from './ui/shared/pipes/truncate.pipe';
     AppBarComponent,
     CardComponent,
     SearchInputComponent,
+    WeatherStateComponent,
     MainPageComponent,
     TranslatePipe,
     TruncatePipe

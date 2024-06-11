@@ -23,7 +23,7 @@ export class MainPageComponent {
   ) {}
 
   ngOnInit() {
-    this.restService.getCurrentWeather('Москва').subscribe((data) => {
+    this.restService.getCurrentWeather('Сыктывкар').subscribe((data) => {
       this.forecastWeather = data;
       this.initMap();
     })
