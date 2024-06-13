@@ -5,6 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FeaturesModule } from './features/features.module';
 import { HttpClientModule } from '@angular/common/http';
 import { TranslationService } from './features/ui/shared/services/translation.service';
+import { FormsModule } from '@angular/forms';
 
 export function initializeApp(translationService: TranslationService) {
   return () => translationService.loadTranslations('ru').toPromise();
@@ -15,6 +16,7 @@ export function initializeApp(translationService: TranslationService) {
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     HttpClientModule,
     FeaturesModule,
   ],

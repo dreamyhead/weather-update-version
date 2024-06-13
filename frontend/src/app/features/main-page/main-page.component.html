@@ -13,13 +13,14 @@
               <span>{{forecastWeather.weather[0].description}}</span>
             </div>
             <div class="content">
-              <app-weather-state [type]="forecastWeather.weather[0].main"></app-weather-state>
+              <app-weather-state [type]="forecastWeather.weather[0].icon"></app-weather-state>
             </div>
           </div>
         </div>
         <div class="divider"></div>
         <div class="desc-container">
           <div class="description">
+            <div class="row">Влажность: {{forecastWeather.weather[0].icon}}</div>
             <div class="row">Влажность: {{forecastWeather.main?.humidity}}</div>
             <div class="row">Давление: {{forecastWeather.main?.pressure}}</div>
             <div class="row">Атмосферное давление, земля: {{forecastWeather.main?.grnd_level ? forecastWeather.main?.grnd_level : '-'}}</div>
@@ -28,17 +29,27 @@
         </div>
       }
       <div class="divider"></div>
-      <div class="map-container">
-        <div id="map"></div>
-      </div>
     </app-card>
   </div>
   <div class="grid-container">
     <div class="grid-item">
-      <app-card></app-card>
+      <app-card>
+        <div class="card-title">
+          <strong>Погодные карты</strong>
+          <span class="example-spacer"></span>
+          <app-select [title]="layerMode"
+                      (optionSelected)="changeMode($event)"
+                      [options]="layerModes">
+          </app-select>
+        </div>
+        <div class="map-container">
+          <div id="map"></div>
+        </div>
+      </app-card>
     </div>
     <div class="grid-item">
-      <app-card></app-card>
+      <app-card>
+      </app-card>
     </div>
   </div>
 </div>

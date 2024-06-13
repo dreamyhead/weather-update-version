@@ -12,3 +12,7 @@ html, body {
   background-color: rgb(138, 138, 138);
   width: 100%;
 }
+
+.leaflet-control-attribution {
+  display: none;
+}

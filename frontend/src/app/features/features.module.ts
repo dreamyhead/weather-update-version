@@ -8,6 +8,9 @@ import { TranslatePipe } from './ui/shared/pipes/translate.pipe';
 import { HttpClientModule } from '@angular/common/http';
 import { TruncatePipe } from './ui/shared/pipes/truncate.pipe';
 import { WeatherStateComponent } from './ui/components/weather-state/weather-state.component';
+import { FormsModule } from '@angular/forms';
+import { MenuComponent } from './ui/components/menu/menu.component';
+import { SelectComponent } from './ui/components/select/select.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +21,8 @@ import { WeatherStateComponent } from './ui/components/weather-state/weather-sta
     MainPageComponent,
     TranslatePipe,
     TruncatePipe,
+    MenuComponent,
+    SelectComponent,
   ],
   imports: [
     CommonModule,
@@ -30,7 +35,9 @@ import { WeatherStateComponent } from './ui/components/weather-state/weather-sta
     WeatherStateComponent,
     MainPageComponent,
     TranslatePipe,
-    TruncatePipe
+    TruncatePipe,
+    MenuComponent,
+    SelectComponent,
   ]
 })
 export class FeaturesModule { }

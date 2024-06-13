@@ -44,13 +44,14 @@
 
 .map-container {
   width: 100%;
-  height: 50%;
+  height: 60%;
 
-  flex: 2;
+  flex: 3;
 
   #map {
     width: 100%;
     height: 100%;
+    z-index: 1;
     border-radius: 0px 0px 15px 15px;
   }
 }
@@ -122,5 +123,17 @@
     opacity: 1;
     left: 15%;
     transform: translateX(-50%);
+  }
+}
+
+.card-title {
+  @include flex(row, center, center);
+
+  width: 100%;
+  padding: $sp-4;
+  box-sizing: border-box;
+
+  .example-spacer {
+    flex: 1 1 auto;
   }
 }

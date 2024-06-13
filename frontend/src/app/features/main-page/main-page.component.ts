@@ -15,7 +15,17 @@ export class MainPageComponent {
   darkMode: boolean = false;
   forecastWeather!: CurrentWeather | null;
   darkModeSubscription!: Subscription;
+  menuOpen: boolean = false;
   private map: L.Map | undefined;
+  private weatherLayer: L.TileLayer | undefined;
+  layerMode: string = 'temp_new';
+  layerModes: any[] = [
+    { key: 'clouds_new', value: 'Облака' },
+    { key: 'temp_new', value: 'Температура' },
+    { key: 'precipitation_new', value: 'Осадки' },
+    { key: 'pressure_new', value: 'Давление' },
+    { key: 'wind_new', value: 'Ветер' }
+  ]
 
   constructor(
     private restService: RestService,
@@ -23,7 +33,7 @@ export class MainPageComponent {
   ) {}
 
   ngOnInit() {
-    this.restService.getCurrentWeather('Сыктывкар').subscribe((data) => {
+    this.restService.getCurrentWeather('Москва').subscribe((data) => {
       this.forecastWeather = data;
       this.initMap();
     })
@@ -53,10 +63,26 @@ export class MainPageComponent {
       attribution: '© OpenStreetMap'
     }).addTo(this.map);
 
-    L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=4f592b2566721ec99b69bb95df24da9a`, {
-      maxZoom: 18,
-      attribution: 'Map data © OpenWeatherMap'
-    }).addTo(this.map);
+    this.updateWeatherLayer();
+  }
+
+  private updateWeatherLayer(): void {
+    if (this.map) {
+      if (this.weatherLayer) {
+        this.map.removeLayer(this.weatherLayer);
+      }
+
+      const url = `https://tile.openweathermap.org/map/${this.layerMode}/{z}/{x}/{y}.png?appid=4f592b2566721ec99b69bb95df24da9a`;
+      this.weatherLayer = L.tileLayer(url, {
+        maxZoom: 18,
+        attribution: 'Map data © OpenWeatherMap'
+      }).addTo(this.map);
+    }
+  }
+
+  changeMode(layerMode: string) {
+    this.layerMode = layerMode;
+    this.updateWeatherLayer();
   }
 
   ngOnDestroy() {

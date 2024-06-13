@@ -28,10 +28,18 @@
   .cloudy {
     position: absolute;
     top: 15%;
-    left: 65%;
+    left: 70%;
     transform: translateX(-50%);
     z-index: 2;
     animation: slideIn 2s forwards;
+  }
+
+  .cloudy-background {
+    position: absolute;
+    top: 5%;
+    left: -10%;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
   }
 }
 
