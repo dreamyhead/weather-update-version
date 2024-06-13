@@ -85,6 +85,43 @@ export class MainPageComponent {
     this.updateWeatherLayer();
   }
 
+  getBackground(): string {
+    let currentBackground: string;
+    const icon = this.forecastWeather?.weather[0].icon;
+  
+    switch (icon) {
+      case '01d':
+      case '01n':
+        currentBackground = 'linear-gradient(to right top, rgb(45 156 255), rgb(215 242 255))';
+        break;
+      case '02d':
+      case '02n':
+        currentBackground = 'linear-gradient(to right top, rgb(201 201 201), rgb(89 169 209))';
+        break;
+      case '03d':
+      case '03n':
+      case '04d':
+      case '04n':
+        currentBackground = 'linear-gradient(to right top, rgb(144, 151, 153), rgb(211 211 211))';
+        break;
+      case '09d':
+      case '09n':
+      case '10d':
+      case '10n':
+      case '50d':
+      case '50n':
+      case '11d':
+      case '13d':
+        currentBackground = 'linear-gradient(to top right, #63696b, #b0b6b9)';
+        break;
+      default:
+        currentBackground = 'linear-gradient(to top right, #ffffff, #dddddd)';
+        break;
+    }
+  
+    return currentBackground;
+  }
+
   ngOnDestroy() {
     this.darkModeSubscription.unsubscribe();
   }

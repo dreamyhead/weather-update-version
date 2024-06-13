@@ -5,7 +5,7 @@
         <div class="temperature-container"><div class="temperature-title"><div class="content">Введите свой город</div></div></div>
       }
       @if (forecastWeather) {
-        <div class="temperature-container">
+        <div class="temperature-container" [ngStyle]="{ 'background': getBackground() }">
           <div class="temperature-title">
             <div class="content">
               <span>{{ 'currentTemperature' | translate }} {{forecastWeather.name}}, {{forecastWeather.sys?.country}}</span>
@@ -28,7 +28,6 @@
           </div>
         </div>
       }
-      <div class="divider"></div>
     </app-card>
   </div>
   <div class="grid-container">
