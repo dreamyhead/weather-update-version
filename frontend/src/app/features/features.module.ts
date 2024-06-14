@@ -11,6 +11,7 @@ import { WeatherStateComponent } from './ui/components/weather-state/weather-sta
 import { FormsModule } from '@angular/forms';
 import { MenuComponent } from './ui/components/menu/menu.component';
 import { SelectComponent } from './ui/components/select/select.component';
+import { SunTimeComponent } from './ui/components/sun-time/sun-time.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { SelectComponent } from './ui/components/select/select.component';
     TruncatePipe,
     MenuComponent,
     SelectComponent,
+    SunTimeComponent
   ],
   imports: [
     CommonModule,
@@ -39,6 +41,7 @@ import { SelectComponent } from './ui/components/select/select.component';
     TruncatePipe,
     MenuComponent,
     SelectComponent,
+    SunTimeComponent
   ]
 })
 export class FeaturesModule { }

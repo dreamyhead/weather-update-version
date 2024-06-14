@@ -45,6 +45,26 @@
 .search-container {
   width: 100%;
   @include flex(row, center, center);
+
+  .search-btn {
+    padding: 0.25rem;
+    min-width: 60px;
+    background-color: transparent;
+    border: none;
+    border-radius: 5px;
+    transition: box-shadow 0.1s ease;
+    cursor: pointer;
+
+    span {
+      font-size: 2rem;
+      color: #334cdb;
+    }
+  }
+
+  .search-btn:hover {
+    box-shadow: 0 0px 14px rgba(175, 175, 175, 0.76);
+    border-radius: 5px;
+  }
 }
 
 .map-container {

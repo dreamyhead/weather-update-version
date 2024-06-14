@@ -29,7 +29,12 @@
                         (valueChange)="onValueChange($event)"
                         (submitClick)="submitSearch()">              
           </search-input>
-          <button (click)="submitSearch()">Искать</button>
+          <button class="search-btn"
+                  (click)="submitSearch()">
+            <span class="material-symbols-rounded">
+              send
+            </span>
+          </button>
         </div>
         <div class="divider"></div>
         <div class="detail-container">
@@ -53,7 +58,7 @@
               </div>
             </div>
             <div class="photo">
-              <img src="/assets/icons/point.png" alt="">
+              <sun-time [options]="forecastWeather.sys"></sun-time>
             </div>
             <div class="full-description">
               <div class="row">asdasd</div>
