@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { StyleService } from '../ui/shared/services/style.service';
 import { Subscription } from 'rxjs';
 import { RestService } from '../ui/shared/services/rest.service';
 import { CurrentWeather } from '../ui/shared/interfaces/CurrentWeather';
 import L from 'leaflet';
+import { SearchInputComponent } from '../ui/components/search-input/search-input.component';
 
 @Component({
   selector: 'main-page',
@@ -29,6 +30,9 @@ export class MainPageComponent {
   ];
   currentMarker?: L.Marker;
   enableEnglish: boolean = false;
+
+  @ViewChild(SearchInputComponent)
+  searchInputComponent!: SearchInputComponent;
 
   constructor(
     private restService: RestService,
@@ -61,6 +65,12 @@ export class MainPageComponent {
       this.forecastWeather = data;
       this.updateCenterMap(this.forecastWeather?.coord?.lat!, this.forecastWeather?.coord?.lon!);
     })
+  }
+
+  submitSearch() {
+    if (this.searchInputComponent) {
+      this.searchInputComponent.submit();
+    }
   }
 
   updateCenterMap(lat: any, lon: any) {

@@ -14,6 +14,10 @@ export class SearchInputComponent {
 
   @Output()
   valueChange: EventEmitter<string> = new EventEmitter<string>();
+
+  @Output() 
+  submitClick: EventEmitter<void> = new EventEmitter<void>();
+
   inputValue: string = '';
   darkMode: boolean = false;
   darkModeSubscription!: Subscription;
@@ -24,6 +28,10 @@ export class SearchInputComponent {
     this.darkModeSubscription = this.styleService.darkModeSubject.subscribe((mode: boolean) => {
       this.darkMode = mode;
     });
+  }
+
+  onSubmitClick() {
+    this.submit();
   }
 
   submit() {
