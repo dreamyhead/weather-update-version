@@ -14,6 +14,7 @@ import L from 'leaflet';
 export class MainPageComponent {
   darkMode: boolean = false;
   forecastWeather!: CurrentWeather | null;
+  enableEnglishSubscription!: Subscription;
   darkModeSubscription!: Subscription;
   menuOpen: boolean = false;
   private map: L.Map | undefined;
@@ -25,15 +26,24 @@ export class MainPageComponent {
     { key: 'precipitation_new', value: 'Осадки' },
     { key: 'pressure_new', value: 'Давление' },
     { key: 'wind_new', value: 'Ветер' }
-  ]
+  ];
+  currentMarker?: L.Marker;
+  enableEnglish: boolean = false;
 
   constructor(
     private restService: RestService,
     private styleService: StyleService
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
-    this.restService.getCurrentWeather('Москва').subscribe((data) => {
+    this.enableEnglishSubscription = this.styleService.enableEnglishSubject.subscribe((enableEnglish) => {
+      this.enableEnglish = enableEnglish;
+      console.log(this.enableEnglish);
+      
+    });
+
+    this.restService.getCurrentWeather('Москва', 'ru').subscribe((data) => {
       this.forecastWeather = data;
       this.initMap();
     })
@@ -43,13 +53,28 @@ export class MainPageComponent {
     });
   }
 
-  inputCity(event: Event) {
-    event.preventDefault();
-    event.stopPropagation();
+  inputCity(city: string) {
     this.forecastWeather = null;
-    this.restService.getCurrentWeather('Лондон').subscribe((data) => {
+    console.log(this.enableEnglish);
+    
+    this.restService.getCurrentWeather(city, this.enableEnglish ? 'en' : 'ru').subscribe((data) => {
       this.forecastWeather = data;
+      this.updateCenterMap(this.forecastWeather?.coord?.lat!, this.forecastWeather?.coord?.lon!);
     })
+  }
+
+  updateCenterMap(lat: any, lon: any) {
+    this.map?.setView([lat, lon]);
+
+    const weatherIcon = L.icon({
+      iconUrl: '/assets/icons/point.png',
+      iconSize: [32, 32],
+    });
+
+    if (this.currentMarker) {
+      this.map?.removeLayer(this.currentMarker);
+    }
+    this.currentMarker = L.marker([lat, lon], { icon: weatherIcon }).addTo(this.map!);
   }
 
   private initMap(): void {
@@ -57,6 +82,13 @@ export class MainPageComponent {
       center: [this.forecastWeather?.coord?.lat!, this.forecastWeather?.coord?.lon!],
       zoom: 13
     });
+
+    const weatherIcon = L.icon({
+      iconUrl: '/assets/icons/point.png',
+      iconSize: [32, 32],
+    });
+
+    this.currentMarker = L.marker([this.forecastWeather?.coord?.lat!, this.forecastWeather?.coord?.lon!], { icon: weatherIcon }).addTo(this.map!);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
@@ -85,6 +117,16 @@ export class MainPageComponent {
     this.updateWeatherLayer();
   }
 
+  onValueChange(value: string) {
+    this.inputCity(value);
+  }
+
+  ngOnDestroy() {
+    this.enableEnglishSubscription.unsubscribe();
+    this.darkModeSubscription.unsubscribe();
+  }
+
+  /*ToDo: Переписать */
   getBackground(): string {
     let currentBackground: string;
     const icon = this.forecastWeather?.weather[0].icon;
@@ -96,10 +138,10 @@ export class MainPageComponent {
         break;
       case '02d':
       case '02n':
-        currentBackground = 'linear-gradient(to right top, rgb(201 201 201), rgb(89 169 209))';
-        break;
       case '03d':
       case '03n':
+        currentBackground = 'linear-gradient(to right top, rgb(201 201 201), rgb(89 169 209))';
+        break;
       case '04d':
       case '04n':
         currentBackground = 'linear-gradient(to right top, rgb(144, 151, 153), rgb(211 211 211))';
@@ -120,9 +162,5 @@ export class MainPageComponent {
     }
   
     return currentBackground;
-  }
-
-  ngOnDestroy() {
-    this.darkModeSubscription.unsubscribe();
   }
 }

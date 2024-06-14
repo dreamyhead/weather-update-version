@@ -2,7 +2,13 @@
   <div class="grid-container">
     <app-card>
       @if (!forecastWeather) {
-        <div class="temperature-container"><div class="temperature-title"><div class="content">Введите свой город</div></div></div>
+        <div class="temperature-container">
+          <div class="temperature-title">
+            <search-input [label]="'Город'"
+                          (valueChange)="onValueChange($event)">              
+            </search-input>
+          </div>
+        </div>
       }
       @if (forecastWeather) {
         <div class="temperature-container" [ngStyle]="{ 'background': getBackground() }">
@@ -18,9 +24,14 @@
           </div>
         </div>
         <div class="divider"></div>
+        <div>
+          <search-input [label]="'Город'"
+                        (valueChange)="onValueChange($event)">              
+          </search-input>
+        </div>
+        <div class="divider"></div>
         <div class="desc-container">
           <div class="description">
-            <div class="row">Влажность: {{forecastWeather.weather[0].icon}}</div>
             <div class="row">Влажность: {{forecastWeather.main?.humidity}}</div>
             <div class="row">Давление: {{forecastWeather.main?.pressure}}</div>
             <div class="row">Атмосферное давление, земля: {{forecastWeather.main?.grnd_level ? forecastWeather.main?.grnd_level : '-'}}</div>

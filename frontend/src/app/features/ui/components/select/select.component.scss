@@ -2,15 +2,10 @@
 
 .select-options {
   position: relative;
-  width: 150px; /* Ширина выпадающего списка */
+  width: 150px;
   cursor: pointer;
   border-radius: 9999px;
 }
-
-// .select-options:hover {
-//   border-radius: 9999px;
-//   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-// }
 
 .selected-option {
   box-sizing: border-box;
@@ -24,7 +19,6 @@
   border-radius: 9999px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
-
 
 .dropdown-list {
   position: absolute;

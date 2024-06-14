@@ -39,6 +39,7 @@ export class AppBarComponent {
     event.preventDefault();
     event.stopPropagation();
     this.enableEnglish = !this.enableEnglish;
+    this.styleService.changeLanguage(this.enableEnglish);
     this.translationService.changeLanguage(this.enableEnglish ? 'en' : 'ru');
   }
 }

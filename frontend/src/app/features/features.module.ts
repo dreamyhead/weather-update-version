@@ -27,6 +27,7 @@ import { SelectComponent } from './ui/components/select/select.component';
   imports: [
     CommonModule,
     HttpClientModule,
+    FormsModule,
   ],
   exports: [
     AppBarComponent,
