@@ -6,7 +6,6 @@ import { Component, ElementRef, Input, ViewChild } from '@angular/core';
   styleUrls: ['./sun-time.component.scss']
 })
 export class SunTimeComponent {
-
   @Input()
   options?: any;
 
@@ -15,9 +14,11 @@ export class SunTimeComponent {
   private sunriseMs: number | undefined;
   private sunsetMs: number | undefined;
   private animationFrameId: number | undefined;
-  
+  private currentSunAngle: number = Math.PI; // Start angle (180 degrees)
+  private targetSunAngle: number = Math.PI; // Initial target angle
+
   ngOnInit() {
-    if (!this.options) {
+    if (!this.options || !this.options.sunrise || !this.options.sunset) {
       return;
     }
 
@@ -26,32 +27,46 @@ export class SunTimeComponent {
   }
 
   ngAfterViewInit() {
-    this.drawSunTime();
+    this.updateTargetSunAngle();
+    this.animateSun();
   }
 
-  drawSunTime() {
-    const canvas = this.canvasRef.nativeElement;
-    const ctx = canvas.getContext('2d');
-    
-    if (!ctx || !this.sunriseMs || !this.sunsetMs) {
+  ngOnDestroy() {
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId);
+    }
+  }
+
+  updateTargetSunAngle() {
+    const now = Date.now();
+
+    if (!this.sunriseMs || !this.sunsetMs) {
       return;
     }
 
-    const now = Date.now();
+    const totalDayDuration = this.sunsetMs - this.sunriseMs;
+    const timeSinceSunrise = now - this.sunriseMs;
+    const sunPositionRatio = Math.min(Math.max(timeSinceSunrise / totalDayDuration, 0), 1);
+
+    this.targetSunAngle = Math.PI + sunPositionRatio * Math.PI; // Update target angle based on the current time
+  }
+
+  animateSun() {
+    const canvas = this.canvasRef.nativeElement;
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx) return;
+
+    // Linear interpolation for smooth animation
+    this.currentSunAngle += (this.targetSunAngle - this.currentSunAngle) * 0.05;
+
+    // Clear the canvas before drawing
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Center of the canvas
     const cx = canvas.width / 2;
     const cy = canvas.height / 2;
     const radius = Math.min(cx, cy) - 10;
-
-    // Calculate sun position
-    const totalDayDuration = this.sunsetMs - this.sunriseMs;
-    const timeSinceSunrise = now - this.sunriseMs;
-
-    const sunPositionRatio = Math.min(Math.max(timeSinceSunrise / totalDayDuration, 0), 1);
-
-    // Clear the canvas before drawing
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw the sun path arc
     ctx.beginPath();
@@ -61,9 +76,8 @@ export class SunTimeComponent {
     ctx.stroke();
 
     // Draw the sun
-    const sunAngle = Math.PI + sunPositionRatio * Math.PI;
-    const sunX = cx + radius * Math.cos(sunAngle);
-    const sunY = cy + radius * Math.sin(sunAngle);
+    const sunX = cx + radius * Math.cos(this.currentSunAngle);
+    const sunY = cy + radius * Math.sin(this.currentSunAngle);
 
     ctx.beginPath();
     ctx.arc(sunX, sunY, 10, 0, 2 * Math.PI);
@@ -72,14 +86,7 @@ export class SunTimeComponent {
     ctx.strokeStyle = 'orange';
     ctx.stroke();
 
-    // Request next frame for animation
-    this.animationFrameId = requestAnimationFrame(() => this.drawSunTime());
-  }
-
-  ngOnDestroy() {
-    // Cleanup animation frame when component is destroyed
-    if (this.animationFrameId) {
-      cancelAnimationFrame(this.animationFrameId);
-    }
+    // Continue the animation
+    this.animationFrameId = requestAnimationFrame(() => this.animateSun());
   }
 }
