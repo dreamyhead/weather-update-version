@@ -1,6 +1,83 @@
-<div class="grid" [ngClass]="darkMode ? 'dark-mode' : 'light-mode'">
+<div class="grid" [ngClass]="darkMode ? 'dark-mode' : 'dark-mode'">
   <div class="grid-container">
-    <app-card>
+    <div class="grid-item">
+      <app-card>
+        @if (!forecastWeather) {
+          <div class="wait-container">
+            <span class="loader"></span>
+          </div>
+        }
+        @if (forecastWeather) {
+          <div class="temperature-container" [ngStyle]="{ 'background': getBackground() }">
+            <div class="temperature-title">
+              <div class="content">
+                <span>{{ 'currentTemperature' | translate }} {{forecastWeather.name}}, {{forecastWeather.sys?.country}}</span>
+                <h1 class="current-temperature">+{{forecastWeather.main!.temp | truncate}}°C</h1>
+                <span>{{forecastWeather.weather[0].description}}</span>
+              </div>
+              <!-- <div class="content">
+                <app-weather-state [type]="forecastWeather.weather[0].icon"></app-weather-state>
+              </div> -->
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="description-container">
+            <div class="column">
+              <strong>Город: </strong><span>{{forecastWeather.name}}</span>
+              <strong>Дата запроса: </strong><span>{{forecastWeather.dt! * 1000 | date:'dd.MM.yyyy'}}</span>
+              <strong>Время запроса: </strong><span>{{forecastWeather.dt! * 1000 | date:'HH:mm'}}</span>
+              <strong>Время восхода: </strong><span>{{forecastWeather.sys?.sunrise! * 1000 | date:'HH:mm'}}</span>
+              <strong>Время заката: </strong><span>{{forecastWeather.sys?.sunset! * 1000 | date:'HH:mm'}}</span>
+            </div>
+            <div class="column">
+              <strong>Город: </strong><span>{{forecastWeather.name}}</span>
+              <strong>Дата запроса: </strong><span>{{forecastWeather.dt! * 1000 | date:'dd.MM.yyyy'}}</span>
+              <strong>Время запроса: </strong><span>{{forecastWeather.dt! * 1000 | date:'HH:mm'}}</span>
+              <strong>Время восхода: </strong><span>{{forecastWeather.sys?.sunrise! * 1000 | date:'HH:mm'}}</span>
+              <strong>Время заката: </strong><span>{{forecastWeather.sys?.sunset! * 1000 | date:'HH:mm'}}</span>
+            </div>
+          </div>
+        }
+      </app-card>
+    </div>
+    <div class="grid-item">
+      <app-card>
+        <div class="card-title">
+          <strong>Погодные карты</strong>
+          <span class="example-spacer"></span>
+          <app-select [title]="layerMode"
+                      (optionSelected)="changeMode($event)"
+                      [options]="layerModes">
+          </app-select>
+        </div>
+        <div class="map-container">
+          <div id="map"></div>
+        </div>
+      </app-card>
+    </div>
+    <div class="grid-item">
+      <app-card>
+        <div class="search-container">
+          <search-input [label]="'Город'"
+                        (valueChange)="onValueChange($event)"
+                        (submitClick)="submitSearch()">              
+          </search-input>
+          <button class="search-btn"
+                  (click)="submitSearch()">
+            <span class="material-symbols-rounded">
+              send
+            </span>
+          </button>
+        </div>
+        <div class="five-days-container">
+          Вот тут рулетка с 5 днями
+        </div>
+      </app-card>
+    </div>
+</div>
+
+
+    <!-- <app-card>
       @if (!forecastWeather) {
         <div class="temperature-container">
           <div class="temperature-title">
@@ -85,12 +162,12 @@
               <div class="divider"></div>
             </div>
           </div>
-          <!-- <div class="description">
+          <div class="description">
             <div class="row">Влажность: {{forecastWeather.main?.humidity}}</div>
             <div class="row">Давление: {{forecastWeather.main?.pressure}}</div>
             <div class="row">Атмосферное давление, земля: {{forecastWeather.main?.grnd_level ? forecastWeather.main?.grnd_level : '-'}}</div>
             <div class="row">Атмосферное давление, море: {{forecastWeather.main?.sea_level  ? forecastWeather.main?.sea_level : '-'}}</div>
-          </div> -->
+          </div>
         </div>
       }
     </app-card>
@@ -115,5 +192,4 @@
       <app-card>
       </app-card>
     </div>
-  </div>
-</div>
+  </div> -->

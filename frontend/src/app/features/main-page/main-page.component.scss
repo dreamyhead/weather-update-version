@@ -15,18 +15,26 @@
     transition: color 0.1s ease, background-color 0.5s ease;
 
     .grid-container {
-      @include flex(column, center, center);
-
-      flex: 1;
-      gap: $sp-5;
+      @include flex(row, center, center);
       width: 100%;
       height: 100%;
-      margin: $sp-4;
-
+      flex-wrap: wrap;
+      box-sizing: border-box;
+  
       .grid-item {
-        flex: 1;
         display: flex;
+        box-sizing: border-box;
+      }
+  
+      .grid-item:nth-child(1),
+      .grid-item:nth-child(2) {
+        width: 50%;
+        height: calc(100% / 2);
+      }
+  
+      .grid-item:nth-child(3) {
         width: 100%;
+        height: calc(100% / 2);
       }
     }
   }
@@ -42,6 +50,58 @@
   }
 }
 
+.wait-container {
+  @include flex(row, center, center);
+
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  box-sizing: border-box;
+
+  .loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #ffffff00;
+    border-bottom-color: #334cdb;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+      0% {
+          transform: rotate(0deg);
+      }
+      100% {
+          transform: rotate(360deg);
+      }
+    } 
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+
+  #map {
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    border-radius: 0px 0px 15px 15px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .grid .grid-container {
+    @include flex(column, center, center);
+    height: 100%;
+  }
+
+  .grid .grid-container .grid-item {
+    width: 100% !important;
+    height: calc(100% / 3) !important;
+  }
+}
 .search-container {
   width: 100%;
   @include flex(row, center, center);
@@ -67,58 +127,68 @@
   }
 }
 
-.map-container {
+.five-days-container {
   width: 100%;
-  height: 60%;
-
-  flex: 3;
-
-  #map {
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    border-radius: 0px 0px 15px 15px;
-  }
+  flex: 2;
 }
 
-.detail-container {
-  flex: 2;
-  width: 100%;
-  padding: 3rem;
-  box-sizing: border-box;
+// .map-container {
+//   width: 100%;
+//   height: 60%;
 
-  .details {
-    flex-wrap: wrap;
-    height: 100%;
+//   flex: 3;
+
+//   #map {
+//     width: 100%;
+//     height: 100%;
+//     z-index: 1;
+//     border-radius: 0px 0px 15px 15px;
+//   }
+// }
+
+// .detail-container {
+//   flex: 2;
+//   width: 100%;
+//   padding: 3rem;
+//   box-sizing: border-box;
+
+//   .details {
+//     flex-wrap: wrap;
+//     height: 100%;
+//     @include flex(row, flex-start, center);
+//     box-sizing: border-box;
+//   }
+
+//   .photo {
+//     @include flex(column, flex-end, center);
+//     width: 50%;
+//     height: 50%;
+//   }
+
+  .description-container {
     @include flex(row, flex-start, center);
-    box-sizing: border-box;
-  }
+    width: 100%;
+    flex: 2;
 
-  .photo {
-    @include flex(column, flex-end, center);
-    width: 50%;
-    height: 50%;
-  }
-
-  .description {
-    @include flex(column, flex-start, center);
-    width: 50%;
-    height: 50%;
-
-    .row {
-      @include flex(row, center, space-between);
-      border-bottom: 1px solid #c9c9c9;
-      width: 100%;
-      padding: 1rem 0rem;
+    .column {
+      @include flex(column, center, space-between);
+      width: 50%;
     }
   }
+//     .row {
+//       @include flex(row, center, space-between);
+//       border-bottom: 1px solid #c9c9c9;
+//       width: 100%;
+//       padding: 1rem 0rem;
+//     }
+//   }
 
-  .full-description{
-    @include flex(column, flex-start, flex-end);
-    width: 100%;
-    height: 50%;
-  }
-}
+//   .full-description{
+//     @include flex(column, flex-start, flex-end);
+//     width: 100%;
+//     height: 50%;
+//   }
+// }
 
 .temperature-container {
   width: 100%;
@@ -131,6 +201,8 @@
   font-size: 6rem;
   margin: $sp-4 0;
 }
+
+
 
 .temperature-title {
   @include flex(row, flex-start, space-between);
