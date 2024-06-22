@@ -74,14 +74,17 @@
           </button>
         </div>
         <div class="five-days-container">
+          <div style="width: 800px; height: 200px;">
+            <canvas #myCanvas width="800" height="200"></canvas>
+          </div>
           <div class="carousel"
               (mousedown)="onMouseDown($event)"
               (mouseup)="onMouseUp($event)"
               (mousemove)="onMouseMove($event)"
               (mouseleave)="onMouseLeave($event)"
               (touchstart)="onTouchStart($event)"
-           (touchmove)="onTouchMove($event)"
-           (touchend)="onTouchEnd($event)">
+              (touchmove)="onTouchMove($event)"
+              (touchend)="onTouchEnd($event)">
             <div class="carousel-inner" [style.transform]="'translateX(-' + currentSlide * 100 + '%)'">
               @if (!forecastWeather) {
                 <app-loader></app-loader>
@@ -93,6 +96,9 @@
                     <p>{{ item.main.temp }}°C</p>
                     <p>{{ item.weather[0].description }}</p>
                   </div>
+                </div>
+                <div style="width: 600px; height: 400px;">
+                  <canvas #myCanvas width="600" height="400"></canvas>
                 </div>
               }
             </div>

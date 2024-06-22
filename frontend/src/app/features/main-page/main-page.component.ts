@@ -1,4 +1,4 @@
-import { Component, HostListener, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { StyleService } from '../ui/shared/services/style.service';
 import { Subscription } from 'rxjs';
 import { RestService } from '../ui/shared/services/rest.service';
@@ -41,10 +41,98 @@ export class MainPageComponent {
   prevTranslate = 0;
   startX: number | null = null;
   isDragging = false;
+
+  @ViewChild('myCanvas') canvasRef: ElementRef | undefined;
+  ctx!: CanvasRenderingContext2D | null;
+
+  // Здесь ваши данные температур
+  temperatures: number[] = [20, 22, 25, 24, 23, 22, 21, 20, 22, 24, 25, 27, 28, 26, 25, 24, 23, 22, 21, 20,
+    22, 24, 25, 27, 28, 26, 25, 24, 23, 22, 21, 20, 22, 24, 25, 27, 28, 26, 25, 24];
+
   constructor(
     private restService: RestService,
     private styleService: StyleService
   ) {
+  }
+
+  ngAfterViewInit() {
+    this.ctx = (this.canvasRef!.nativeElement as HTMLCanvasElement).getContext('2d');
+    this.drawChart();
+  }
+
+  private drawChart() {
+    const canvas = this.canvasRef!.nativeElement as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d');
+
+    const margin = 50;
+    const width = canvas.width - 2 * margin;
+    const height = canvas.height - 2 * margin;
+
+    if (!ctx) {
+      return;
+    }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Рисуем оси X и Y
+    ctx.beginPath();
+    ctx.moveTo(margin, margin);
+    ctx.lineTo(margin, canvas.height - margin);
+    ctx.lineTo(canvas.width - margin, canvas.height - margin);
+    ctx.strokeStyle = '#333';
+    ctx.stroke();
+
+    // Рисуем метки на оси X
+    ctx.font = '12px Arial';
+    ctx.fillStyle = 'black';
+    ctx.textAlign = 'center';
+    for (let i = 0; i < this.temperatures.length; i++) {
+      const xPos = margin + i * (width / (this.temperatures.length - 1));
+      ctx.fillText(String(i + 1), xPos, canvas.height - margin + 20);
+    }
+
+    // Рисуем метки на оси Y
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    const maxValue = Math.max(...this.temperatures);
+    const minValue = Math.min(...this.temperatures);
+    const valueRange = maxValue - minValue;
+    const yStep = valueRange > 0 ? height / valueRange : 0;
+    ctx.fillStyle = '#333';
+    for (let i = minValue; i <= maxValue; i += 5) {
+      const yPos = canvas.height - margin - (i - minValue) * yStep;
+      ctx.fillText(String(i), margin - 10, yPos);
+      ctx.beginPath();
+      ctx.moveTo(margin - 5, yPos);
+      ctx.lineTo(margin, yPos);
+      ctx.strokeStyle = '#ccc';
+      ctx.stroke();
+    }
+
+    // Рисуем график температур
+    ctx.beginPath();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'blue';
+
+    const step = width / (this.temperatures.length - 1);
+    ctx.moveTo(margin, canvas.height - margin - (this.temperatures[0] - minValue) * yStep);
+
+    for (let i = 1; i < this.temperatures.length; i++) {
+      const yPos = canvas.height - margin - (this.temperatures[i] - minValue) * yStep;
+      ctx.lineTo(margin + i * step, yPos);
+    }
+
+    ctx.stroke();
+
+    // Добавим точки на графике для выделения значений
+    ctx.fillStyle = 'white';
+    ctx.strokeStyle = 'blue';
+    for (let i = 0; i < this.temperatures.length; i++) {
+      const yPos = canvas.height - margin - (this.temperatures[i] - minValue) * yStep;
+      ctx.beginPath();
+      ctx.arc(margin + i * step, yPos, 5, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.stroke();
+    }
   }
 
   ngOnInit() {
