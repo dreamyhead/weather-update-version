@@ -4,6 +4,7 @@
   @include flex(column, unset, unset);
 
   flex: 1;
+  overflow-y: auto;
 
   .grid {
     @include flex(row, center, flex-start);
@@ -20,21 +21,21 @@
       height: 100%;
       flex-wrap: wrap;
       box-sizing: border-box;
-  
+
       .grid-item {
         display: flex;
         box-sizing: border-box;
       }
-  
+
       .grid-item:nth-child(1),
       .grid-item:nth-child(2) {
         width: 50%;
-        height: calc(100% / 2);
+        height: 55%;
       }
-  
+
       .grid-item:nth-child(3) {
         width: 100%;
-        height: calc(100% / 2);
+        height: 45%;
       }
     }
   }
@@ -76,7 +77,7 @@
       100% {
           transform: rotate(360deg);
       }
-    } 
+    }
 }
 
 .map-container {
@@ -102,6 +103,8 @@
     height: calc(100% / 3) !important;
   }
 }
+
+
 .search-container {
   width: 100%;
   @include flex(row, center, center);
@@ -168,11 +171,15 @@
   .description-container {
     @include flex(row, flex-start, center);
     width: 100%;
-    flex: 2;
+    height: 50%;
+    box-sizing: border-box;
 
     .column {
-      @include flex(column, center, space-between);
+      @include flex(column, flex-start, center);
       width: 50%;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 1rem;
     }
   }
 //     .row {
@@ -192,13 +199,14 @@
 
 .temperature-container {
   width: 100%;
-  flex: 1;
+  height: 50%;
+  box-sizing: border-box;
   border-radius: 15px 15px 0px 0px;
   animation: fadeIn 2s forwards;
 }
 
 .current-temperature {
-  font-size: 6rem;
+  font-size: 3rem;
   margin: $sp-4 0;
 }
 
@@ -256,4 +264,14 @@
   .example-spacer {
     flex: 1 1 auto;
   }
+}
+
+.container {
+  @include flex(column, center, flex-start);
+
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  box-sizing: border-box;
+  box-shadow: 0px 1.5px 5px #c9c9c9;
 }

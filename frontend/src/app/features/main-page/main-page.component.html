@@ -1,4 +1,4 @@
-<div class="grid" [ngClass]="darkMode ? 'dark-mode' : 'dark-mode'">
+<div class="grid" [ngClass]="darkMode ? 'dark-mode' : 'light-mode'">
   <div class="grid-container">
     <div class="grid-item">
       <app-card>
@@ -23,18 +23,24 @@
           <div class="divider"></div>
           <div class="description-container">
             <div class="column">
-              <strong>Город: </strong><span>{{forecastWeather.name}}</span>
-              <strong>Дата запроса: </strong><span>{{forecastWeather.dt! * 1000 | date:'dd.MM.yyyy'}}</span>
-              <strong>Время запроса: </strong><span>{{forecastWeather.dt! * 1000 | date:'HH:mm'}}</span>
-              <strong>Время восхода: </strong><span>{{forecastWeather.sys?.sunrise! * 1000 | date:'HH:mm'}}</span>
-              <strong>Время заката: </strong><span>{{forecastWeather.sys?.sunset! * 1000 | date:'HH:mm'}}</span>
+              <div class="row">
+                <strong>Город: </strong><span>{{forecastWeather.name}}</span>
+              </div>
+              <div class="row">
+                <strong>Дата запроса: </strong><span>{{forecastWeather.dt! * 1000 | date:'dd.MM.yyyy'}}</span>
+              </div>
+              <div class="row">
+                <strong>Время запроса: </strong><span>{{forecastWeather.dt! * 1000 | date:'HH:mm'}}</span>
+              </div>
+              <div class="row">
+                <strong>Время восхода: </strong><span>{{forecastWeather.sys?.sunrise! * 1000 | date:'HH:mm'}}</span>
+              </div>
+              <div class="row">
+                <strong>Время заката: </strong><span>{{forecastWeather.sys?.sunset! * 1000 | date:'HH:mm'}}</span>
+              </div>
             </div>
             <div class="column">
-              <strong>Город: </strong><span>{{forecastWeather.name}}</span>
-              <strong>Дата запроса: </strong><span>{{forecastWeather.dt! * 1000 | date:'dd.MM.yyyy'}}</span>
-              <strong>Время запроса: </strong><span>{{forecastWeather.dt! * 1000 | date:'HH:mm'}}</span>
-              <strong>Время восхода: </strong><span>{{forecastWeather.sys?.sunrise! * 1000 | date:'HH:mm'}}</span>
-              <strong>Время заката: </strong><span>{{forecastWeather.sys?.sunset! * 1000 | date:'HH:mm'}}</span>
+              <sun-time></sun-time>
             </div>
           </div>
         }
@@ -60,7 +66,7 @@
         <div class="search-container">
           <search-input [label]="'Город'"
                         (valueChange)="onValueChange($event)"
-                        (submitClick)="submitSearch()">              
+                        (submitClick)="submitSearch()">
           </search-input>
           <button class="search-btn"
                   (click)="submitSearch()">
@@ -82,7 +88,7 @@
         <div class="temperature-container">
           <div class="temperature-title">
             <search-input [label]="'Город'"
-                          (valueChange)="onValueChange($event)">              
+                          (valueChange)="onValueChange($event)">
             </search-input>
           </div>
         </div>
@@ -104,7 +110,7 @@
         <div class="search-container">
           <search-input [label]="'Город'"
                         (valueChange)="onValueChange($event)"
-                        (submitClick)="submitSearch()">              
+                        (submitClick)="submitSearch()">
           </search-input>
           <button class="search-btn"
                   (click)="submitSearch()">
