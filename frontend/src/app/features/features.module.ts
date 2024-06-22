@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { MenuComponent } from './ui/components/menu/menu.component';
 import { SelectComponent } from './ui/components/select/select.component';
 import { SunTimeComponent } from './ui/components/sun-time/sun-time.component';
+import { LoaderComponent } from './ui/components/loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { SunTimeComponent } from './ui/components/sun-time/sun-time.component';
     TruncatePipe,
     MenuComponent,
     SelectComponent,
-    SunTimeComponent
+    SunTimeComponent,
+    LoaderComponent
   ],
   imports: [
     CommonModule,
@@ -41,7 +43,8 @@ import { SunTimeComponent } from './ui/components/sun-time/sun-time.component';
     TruncatePipe,
     MenuComponent,
     SelectComponent,
-    SunTimeComponent
+    SunTimeComponent,
+    LoaderComponent
   ]
 })
 export class FeaturesModule { }

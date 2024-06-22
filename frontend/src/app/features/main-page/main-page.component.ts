@@ -1,10 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, HostListener, ViewChild } from '@angular/core';
 import { StyleService } from '../ui/shared/services/style.service';
 import { Subscription } from 'rxjs';
 import { RestService } from '../ui/shared/services/rest.service';
 import { CurrentWeather } from '../ui/shared/interfaces/CurrentWeather';
 import L from 'leaflet';
 import { SearchInputComponent } from '../ui/components/search-input/search-input.component';
+import { ForecastWeather } from '../ui/shared/interfaces/ForecastWeather';
 
 @Component({
   selector: 'main-page',
@@ -14,7 +15,8 @@ import { SearchInputComponent } from '../ui/components/search-input/search-input
 
 export class MainPageComponent {
   darkMode: boolean = false;
-  forecastWeather!: CurrentWeather | null;
+  forecastWeather!: ForecastWeather | null;
+  currentWeather!: CurrentWeather | null;
   enableEnglishSubscription!: Subscription;
   darkModeSubscription!: Subscription;
   menuOpen: boolean = false;
@@ -34,6 +36,11 @@ export class MainPageComponent {
   @ViewChild(SearchInputComponent)
   searchInputComponent!: SearchInputComponent;
 
+  currentSlide = 0;
+  currentTranslate = 0;
+  prevTranslate = 0;
+  startX: number | null = null;
+  isDragging = false;
   constructor(
     private restService: RestService,
     private styleService: StyleService
@@ -48,8 +55,13 @@ export class MainPageComponent {
     });
 
     this.restService.getCurrentWeather('Москва', 'ru').subscribe((data) => {
-      this.forecastWeather = data;
+      this.currentWeather = data;
       this.initMap();
+    })
+
+    this.restService.getForecastWeather('Москва').subscribe((data) => {
+      console.log(data);
+      this.forecastWeather = data;
     })
 
     this.darkModeSubscription = this.styleService.darkModeSubject.subscribe((mode: boolean) => {
@@ -58,12 +70,17 @@ export class MainPageComponent {
   }
 
   inputCity(city: string) {
-    this.forecastWeather = null;
+    this.currentWeather = null;
     console.log(this.enableEnglish);
     
     this.restService.getCurrentWeather(city, this.enableEnglish ? 'en' : 'ru').subscribe((data) => {
+      this.currentWeather = data;
+      this.updateCenterMap(this.currentWeather?.coord?.lat!, this.currentWeather?.coord?.lon!);
+    })
+
+    this.restService.getForecastWeather(city, this.enableEnglish ? 'en' : 'ru').subscribe((data) => {
+      console.log(data);
       this.forecastWeather = data;
-      this.updateCenterMap(this.forecastWeather?.coord?.lat!, this.forecastWeather?.coord?.lon!);
     })
   }
 
@@ -89,7 +106,7 @@ export class MainPageComponent {
 
   private initMap(): void {
     this.map = L.map('map', {
-      center: [this.forecastWeather?.coord?.lat!, this.forecastWeather?.coord?.lon!],
+      center: [this.currentWeather?.coord?.lat!, this.currentWeather?.coord?.lon!],
       zoom: 13
     });
 
@@ -98,7 +115,7 @@ export class MainPageComponent {
       iconSize: [32, 32],
     });
 
-    this.currentMarker = L.marker([this.forecastWeather?.coord?.lat!, this.forecastWeather?.coord?.lon!], { icon: weatherIcon }).addTo(this.map!);
+    this.currentMarker = L.marker([this.currentWeather?.coord?.lat!, this.currentWeather?.coord?.lon!], { icon: weatherIcon }).addTo(this.map!);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
@@ -139,7 +156,7 @@ export class MainPageComponent {
   /*ToDo: Переписать */
   getBackground(): string {
     let currentBackground: string;
-    const icon = this.forecastWeather?.weather[0].icon;
+    const icon = this.currentWeather?.weather[0].icon;
   
     switch (icon) {
       case '01d':
@@ -172,5 +189,137 @@ export class MainPageComponent {
     }
   
     return currentBackground;
+  }
+
+  // @HostListener('touchstart', ['$event'])
+  // onTouchStart(event: TouchEvent) {
+  //   this.startX = event.touches[0].clientX;
+  // }
+
+  // @HostListener('touchmove', ['$event'])
+  // onTouchMove(event: TouchEvent) {
+  //   if (!this.startX) return;
+
+  //   const currentX = event.touches[0].clientX;
+  //   const diffX = this.startX - currentX;
+
+  //   if (diffX > this.swipeThreshold) {
+  //     this.nextSlide();
+  //     this.startX = null;
+  //   } else if (diffX < -this.swipeThreshold) {
+  //     this.prevSlide();
+  //     this.startX = null;
+  //   }
+  // }
+
+  // @HostListener('touchend')
+  // onTouchEnd() {
+  //   this.startX = null;
+  // }
+
+  // @HostListener('mousedown', ['$event'])
+  // onMouseDown(event: MouseEvent) {
+  //   this.startX = event.clientX;
+  // }
+
+  // @HostListener('mousemove', ['$event'])
+  // onMouseMove(event: MouseEvent) {
+  //   if (this.startX !== null) {
+  //     this.handleSwipe(event.clientX);
+  //   }
+  // }
+
+  // @HostListener('mouseup')
+  // onMouseUp() {
+  //   this.startX = null;
+  // }
+
+  // handleSwipe(currentX: number) {
+  //   if (this.startX === null) return;
+
+  //   const diffX = this.startX - currentX;
+
+  //   if (diffX > this.swipeThreshold) {
+  //     this.nextSlide();
+  //     this.startX = null;
+  //   } else if (diffX < -this.swipeThreshold) {
+  //     this.prevSlide();
+  //     this.startX = null;
+  //   }
+  // }
+
+  startDrag(clientX: number) {
+    this.startX = clientX;
+    this.isDragging = true;
+  }
+
+  drag(clientX: number) {
+    if (this.startX !== null) {
+      const currentX = clientX;
+      const diffX = currentX - this.startX;
+      this.currentTranslate = this.prevTranslate + diffX;
+    }
+  }
+
+  endDrag() {
+    this.isDragging = false;
+    const moveBy = this.currentTranslate - this.prevTranslate;
+    if (Math.abs(moveBy) > 50) {
+      if (moveBy < 0) {
+        this.nextSlide();
+      } else {
+        this.prevSlide();
+      }
+    }
+    this.currentTranslate = this.currentSlide * -window.innerWidth;
+    this.prevTranslate = this.currentTranslate;
+  }
+
+  nextSlide() {
+    if (this.currentSlide < this.forecastWeather!.list!.length - 1) {
+      this.currentSlide++;
+    }
+    this.currentTranslate = this.currentSlide * -window.innerWidth;
+    this.prevTranslate = this.currentTranslate;
+  }
+
+  prevSlide() {
+    if (this.currentSlide > 0) {
+      this.currentSlide--;
+    }
+    this.currentTranslate = this.currentSlide * -window.innerWidth;
+    this.prevTranslate = this.currentTranslate;
+  }
+
+  onMouseDown(event: MouseEvent) {
+    this.startDrag(event.clientX);
+  }
+
+  onMouseMove(event: MouseEvent) {
+    if (this.isDragging) {
+      this.drag(event.clientX);
+    }
+  }
+
+  onMouseUp(event: MouseEvent) {
+    this.endDrag();
+  }
+
+  onMouseLeave(event: MouseEvent) {
+    if (this.isDragging) {
+      this.endDrag();
+    }
+  }
+
+  onTouchStart(event: TouchEvent) {
+    this.startDrag(event.touches[0].clientX);
+  }
+
+  onTouchMove(event: TouchEvent) {
+    this.drag(event.touches[0].clientX);
+  }
+
+  onTouchEnd(event: TouchEvent) {
+    this.endDrag();
   }
 }
