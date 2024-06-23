@@ -35,19 +35,18 @@ export class MainPageComponent {
 
   @ViewChild(SearchInputComponent)
   searchInputComponent!: SearchInputComponent;
-
+  currentGraph: string = 'one-day';
   currentSlide = 0;
   currentTranslate = 0;
   prevTranslate = 0;
   startX: number | null = null;
   isDragging = false;
 
-  @ViewChild('myCanvas') canvasRef: ElementRef | undefined;
+  @ViewChild('myCanvas', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
   ctx!: CanvasRenderingContext2D | null;
 
   // Здесь ваши данные температур
-  temperatures: number[] = [20, 22, 25, 24, 23, 22, 21, 20, 22, 24, 25, 27, 28, 26, 25, 24, 23, 22, 21, 20,
-    22, 24, 25, 27, 28, 26, 25, 24, 23, 22, 21, 20, 22, 24, 25, 27, 28, 26, 25, 24];
+  temperatures: number[] = [];
 
   constructor(
     private restService: RestService,
@@ -55,14 +54,22 @@ export class MainPageComponent {
   ) {
   }
 
-  ngAfterViewInit() {
-    this.ctx = (this.canvasRef!.nativeElement as HTMLCanvasElement).getContext('2d');
+  switchGraph(graph: 'one-day' | 'four-days') {
+    this.currentGraph = graph;
     this.drawChart();
   }
 
   private drawChart() {
     const canvas = this.canvasRef!.nativeElement as HTMLCanvasElement;
+
     const ctx = canvas.getContext('2d');
+
+    let forecastLength;
+    if (this.currentGraph === 'one-day') {
+      forecastLength = 10;
+    } else {
+      forecastLength = 40;
+    }
 
     const margin = 50;
     const width = canvas.width - 2 * margin;
@@ -81,12 +88,16 @@ export class MainPageComponent {
     ctx.strokeStyle = '#333';
     ctx.stroke();
 
+    this.forecastWeather?.list.forEach((item) => {
+      this.temperatures.push(item.main.temp);
+    })
+
     // Рисуем метки на оси X
     ctx.font = '12px Arial';
     ctx.fillStyle = 'black';
     ctx.textAlign = 'center';
-    for (let i = 0; i < this.temperatures.length; i++) {
-      const xPos = margin + i * (width / (this.temperatures.length - 1));
+    for (let i = 0; i < forecastLength; i++) {
+      const xPos = margin + i * (width / (forecastLength - 1));
       ctx.fillText(String(i + 1), xPos, canvas.height - margin + 20);
     }
 
@@ -112,34 +123,34 @@ export class MainPageComponent {
     ctx.beginPath();
     ctx.lineWidth = 3;
     ctx.strokeStyle = 'blue';
+    ctx.lineJoin = 'round';
+    const step = width / (forecastLength - 1);
+    ctx.moveTo(margin, canvas.height - margin - (this.forecastWeather!.list[0].main.temp - minValue) * yStep);
 
-    const step = width / (this.temperatures.length - 1);
-    ctx.moveTo(margin, canvas.height - margin - (this.temperatures[0] - minValue) * yStep);
-
-    for (let i = 1; i < this.temperatures.length; i++) {
-      const yPos = canvas.height - margin - (this.temperatures[i] - minValue) * yStep;
+    for (let i = 1; i < forecastLength; i++) {
+      const yPos = canvas.height - margin - (this.forecastWeather!.list[i].main.temp - minValue) * yStep;
       ctx.lineTo(margin + i * step, yPos);
     }
 
     ctx.stroke();
 
     // Добавим точки на графике для выделения значений
-    ctx.fillStyle = 'white';
-    ctx.strokeStyle = 'blue';
-    for (let i = 0; i < this.temperatures.length; i++) {
-      const yPos = canvas.height - margin - (this.temperatures[i] - minValue) * yStep;
-      ctx.beginPath();
-      ctx.arc(margin + i * step, yPos, 5, 0, 2 * Math.PI);
-      ctx.fill();
-      ctx.stroke();
-    }
+    // ctx.fillStyle = 'transparent';
+    // ctx.strokeStyle = 'blue';
+    // for (let i = 0; i < this.forecastWeather!.list.length; i++) {
+    //   const yPos = canvas.height - margin - (this.forecastWeather!.list[i].main.temp- minValue) * yStep;
+    //   ctx.beginPath();
+    //   ctx.arc(margin + i * step, yPos, 5, 0, 2 * Math.PI);
+    //   ctx.fill();
+    //   ctx.stroke();
+    // }
   }
 
   ngOnInit() {
     this.enableEnglishSubscription = this.styleService.enableEnglishSubject.subscribe((enableEnglish) => {
       this.enableEnglish = enableEnglish;
       console.log(this.enableEnglish);
-      
+
     });
 
     this.restService.getCurrentWeather('Москва', 'ru').subscribe((data) => {
@@ -147,9 +158,12 @@ export class MainPageComponent {
       this.initMap();
     })
 
-    this.restService.getForecastWeather('Москва').subscribe((data) => {
+    this.restService.getForecastWeather('Москва', 'ru').subscribe((data) => {
       console.log(data);
+      this.temperatures = [];
       this.forecastWeather = data;
+      this.ctx = (this.canvasRef!.nativeElement as HTMLCanvasElement).getContext('2d');
+      this.drawChart();
     })
 
     this.darkModeSubscription = this.styleService.darkModeSubject.subscribe((mode: boolean) => {
@@ -160,7 +174,7 @@ export class MainPageComponent {
   inputCity(city: string) {
     this.currentWeather = null;
     console.log(this.enableEnglish);
-    
+
     this.restService.getCurrentWeather(city, this.enableEnglish ? 'en' : 'ru').subscribe((data) => {
       this.currentWeather = data;
       this.updateCenterMap(this.currentWeather?.coord?.lat!, this.currentWeather?.coord?.lon!);
@@ -169,6 +183,9 @@ export class MainPageComponent {
     this.restService.getForecastWeather(city, this.enableEnglish ? 'en' : 'ru').subscribe((data) => {
       console.log(data);
       this.forecastWeather = data;
+      this.temperatures = [];
+      this.ctx = (this.canvasRef!.nativeElement as HTMLCanvasElement).getContext('2d');
+      this.drawChart();
     })
   }
 
@@ -245,7 +262,7 @@ export class MainPageComponent {
   getBackground(): string {
     let currentBackground: string;
     const icon = this.currentWeather?.weather[0].icon;
-  
+
     switch (icon) {
       case '01d':
       case '01n':
@@ -275,7 +292,7 @@ export class MainPageComponent {
         currentBackground = 'linear-gradient(to top right, #ffffff, #dddddd)';
         break;
     }
-  
+
     return currentBackground;
   }
 

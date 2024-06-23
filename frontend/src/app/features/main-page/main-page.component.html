@@ -1,4 +1,4 @@
-<div class="grid" [ngClass]="darkMode ? 'dark-mode' : 'dark-mode'">
+<div class="grid" [ngClass]="darkMode ? 'dark-mode' : 'light-mode'">
   <div class="grid-container">
     <div class="grid-item">
       <app-card>
@@ -66,16 +66,20 @@
                         (valueChange)="onValueChange($event)"
                         (submitClick)="submitSearch()">
           </search-input>
-          <button class="search-btn"
+          <!-- <button class="search-btn"
                   (click)="submitSearch()">
             <span class="material-symbols-rounded">
               send
             </span>
-          </button>
+          </button> -->
         </div>
         <div class="five-days-container">
-          <div style="width: 800px; height: 200px;">
-            <canvas #myCanvas width="800" height="200"></canvas>
+          <div class="plot">
+            <div style="text-align: center; margin-bottom: 20px;">
+              <button [class.active]="currentGraph === 'one-day'" (click)="switchGraph('one-day')">One Day</button>
+              <button [class.active]="currentGraph === 'four-days'" (click)="switchGraph('four-days')">Four Days</button>
+            </div>
+            <canvas #myCanvas width="800" ></canvas>
           </div>
           <div class="carousel"
               (mousedown)="onMouseDown($event)"
